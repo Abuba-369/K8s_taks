@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+  labels:
+    name: web
+spec:  
+  ports:
+    - port: 80
+      targetPort: 3000
+      protocol: TCP
+  selector:
+    name: web
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+   name: web
+spec:
+   replicas: 3
+   template:
+     metadata:
+       labels:
+         name: web
+   spec:
+     containers:
+     – name: test-web
+       image: developerrohitkhatri/sample-nodejs-api
+       ports:
+       – containerPort: 3000
+       env:
+       - name: mongo_DB_host
+       valueFrom:
+            configMapKeyRef:
+              key: DB_HOST
+              name: test-config
+       - name: mongo_DB_port
+       valueFrom:
+            configMapKeyRef:
+              key: DB_PORT
+              name: test-config
+       - name: mongo_DB_database
+       valueFrom:
+            configMapKeyRef:
+              key: DB_DATABASE
+              name: test-config
+       - name: mongo_DB_username
+       valueFrom:
+            configMapKeyRef:
+              key: DB_USERNAME
+              name: test-config
+       - name: mongo_DB_password
+       valueFrom:
+            configMapKeyRef:
+              key: DB_PASSWORD
+              name: test-config
